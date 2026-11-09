@@ -16,30 +16,7 @@ from sqlalchemy import create_engine
 
 
 # Read a sample of the data
-prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
-url = f'{prefix}/yellow_tripdata_{year}-{month:02d}.csv.gz'
-df = pd.read_csv(url)
 
-# Display first rows
-df.head()
-
-# Check data types
-df.dtypes
-
-# Check data shape
-df.shape
-
-
-# In[58]:
-
-
-len(df)
-
-
-# In[59]:
-
-
-df['VendorID']
 
 
 # In[60]:
@@ -69,29 +46,19 @@ parse_dates = [
     "tpep_dropoff_datetime"
 ]
 
-df = pd.read_csv(
-    url,
-    dtype=dtype,
-    parse_dates=parse_dates
-)
 
 
 # In[61]:
 
-
-df
-
-
 # In[62]:
 
 
-engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}')
+
 
 
 # In[63]:
 
 
-print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
 
 
 # In[64]:
@@ -113,6 +80,9 @@ def run():
     chunksize = 100000
     targetTable = 'yellow_taxi_data'
 
+    prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
+    url = f'{prefix}/yellow_tripdata_{year}-{month:02d}.csv.gz'
+    engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}')
     df_iter = pd.read_csv(
         url,
         dtype=dtype,
